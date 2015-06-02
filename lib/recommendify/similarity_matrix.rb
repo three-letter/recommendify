@@ -54,7 +54,7 @@ private
   def serialize_item(item_id, max_precision=5)
     items = @write_queue[item_id].to_a
     items.sort!{ |a,b| b[1] <=> a[1] }
-    items = items[0..max_neighbors-1]
+    #items = items[0..max_neighbors-1]
     items = items.map{ |i,s| s>0 ? "#{i}:#{s.to_s[0..max_precision]}" : nil } 
     items.compact * "|"
   end

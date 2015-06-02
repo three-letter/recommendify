@@ -1,6 +1,7 @@
 class Recommendify::Base
 
   attr_reader :similarity_matrix, :input_matrices
+	attr_accessor :redis_prefix_self
 
   @@max_neighbors = nil
   @@input_matrices = {}
@@ -18,7 +19,8 @@ class Recommendify::Base
     @@input_matrices
   end
 
-  def initialize    
+  def initialize(opts = nil)
+		@redis_prefix_self = opts[:redis_prefix] if opts && opts[:redis_prefix]
     @input_matrices = Hash[self.class.input_matrices.map{ |key, opts| 
       opts.merge!(:key => key, :redis_prefix => redis_prefix)
       [ key, Recommendify::InputMatrix.create(opts) ]
@@ -31,7 +33,7 @@ class Recommendify::Base
   end
 
   def redis_prefix
-    "recommendify"
+    @redis_prefix_self || "recommendify"
   end
 
   def max_neighbors
